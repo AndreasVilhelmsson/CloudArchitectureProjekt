@@ -1,0 +1,27 @@
+---
+- name: Skapa Azure nätverk och resource group
+  hosts: localhost
+  connection: local
+  vars:
+    resource_group: "MyResourceGroup"
+    location: "westeurope"
+
+  tasks:
+    - name: Skapa resource group
+      azure_rm_resourcegroup:
+        name: "{{ resource_group }}"
+        location: "{{ location }}"
+
+    - name: Skapa virtual network
+      azure_rm_virtualnetwork:
+        name: "myVnet"
+        resource_group: "{{ resource_group }}"
+        address_prefixes: "10.0.0.0/16"
+        location: "{{ location }}"
+
+    - name: Skapa subnet
+      azure_rm_subnet:
+        name: "mySubnet"
+        resource_group: "{{ resource_group }}"
+        virtual_network_name: "myVnet"
+        address_prefix: "10.0.1.0/24"
